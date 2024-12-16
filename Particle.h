@@ -17,21 +17,17 @@ public:
     virtual ~Particle() {}
 
     void update(float dt);
-    void unitTests();
-    
-    // Function to check if particle's TTL has expired
     bool isAlive() const { return m_ttl > 0.0f; }
-
+    
 private:
-    // Matrix representing the particle's vertices (Cartesian coordinates)
     Matrix m_A;
-    float m_ttl; // Time to live
+    float m_ttl;
     int m_numPoints;
-    float m_radiansPerSec; // Angular velocity
-    float m_vx, m_vy; // Initial velocities in x and y
+    float m_radiansPerSec;
+    float m_vx, m_vy;
     sf::Color m_color1, m_color2;
     sf::Vector2f m_centerCoordinate;
-    sf::Transform m_cartesianPlane; // Transformation matrix for Cartesian to screen coordinates
+    sf::Transform m_cartesianPlane;
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

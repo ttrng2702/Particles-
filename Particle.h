@@ -1,41 +1,39 @@
+#ifndef PARTICLE_H
+#define PARTICLE_H
 
-#pragma once
-#include "Matrices.h"
 #include <SFML/Graphics.hpp>
-#define M_PI 3.1415926535897932384626433
-const float G = 1000; //Gravity
-const float TTL = 5.0; //Time To Live
-const float SCALE = 0.999;
-using namespace Matrices;
-using namespace sf;
-class Particle : public Drawable
-{
+#include "Matrix.h"
+#include "RotationMatrix.h"
+#include "ScalingMatrix.h"
+#include "TranslationMatrix.h"
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+
+class Particle : public sf::Drawable {
 public:
-Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition);
-virtual void draw(RenderTarget& target, RenderStates states) const override;
-void update(float dt);
-float getTTL() { return m_ttl; }
-//Functions for unit testing
-bool almostEqual(double a, double b, double eps = 0.0001);
-void unitTests();
+    Particle(sf::RenderTarget& target, int numPoints, sf::Vector2i mouseClickPosition);
+    virtual ~Particle() {}
+
+    void update(float dt);
+    void unitTests();
+    
+    // Function to check if particle's TTL has expired
+    bool isAlive() const { return m_ttl > 0.0f; }
+
 private:
-float m_ttl;
-int m_numPoints;
-Vector2f m_centerCoordinate;
-float m_radiansPerSec;
-float m_vx;
-float m_vy;
-View m_cartesianPlane;
-Color m_color1;
-Color m_color2;
-Matrix m_A;
-///rotate Particle by theta radians counter-clockwise
-///construct a RotationMatrix R, left mulitply it to m_A
-void rotate(double theta);
-///Scale the size of the Particle by factor c
-///construct a ScalingMatrix S, left multiply it to m_A
-void scale(double c);
-///shift the Particle by (xShift, yShift) coordinates
-///construct a TranslationMatrix T, add it to m_A
-void translate(double xShift, double yShift);
+    // Matrix representing the particle's vertices (Cartesian coordinates)
+    Matrix m_A;
+    float m_ttl; // Time to live
+    int m_numPoints;
+    float m_radiansPerSec; // Angular velocity
+    float m_vx, m_vy; // Initial velocities in x and y
+    sf::Color m_color1, m_color2;
+    sf::Vector2f m_centerCoordinate;
+    sf::Transform m_cartesianPlane; // Transformation matrix for Cartesian to screen coordinates
+
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
+
+#endif
